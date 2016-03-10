@@ -5,13 +5,13 @@
          version="3.1">
 
     <servlet>
-        <servlet-name>FirstServlet</servlet-name>
-        <servlet-class>FirstServlet</servlet-class>
+        <servlet-name>SQLservlet</servlet-name>
+        <servlet-class>SQLservlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>FirstServlet</servlet-name>
-        <url-pattern>/fs</url-pattern>
+        <servlet-name>SQLservlet</servlet-name>
+        <url-pattern>/sql</url-pattern>
     </servlet-mapping>
 
 </web-app>

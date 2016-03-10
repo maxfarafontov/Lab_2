@@ -17,58 +17,122 @@ public class SQLservlet extends GenericServlet {
     }
 
     @Override
-    public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws
-            ServletException, IOException {
+    public void service(ServletRequest servletRequest,
+                        ServletResponse servletResponse)
+            throws ServletException, IOException {
+        servletResponse.setContentType("text/html;charset=utf-8");
         sendSqlForm(servletRequest, servletResponse);
     }
 
-    private void sendSqlForm(ServletRequest servletRequest, ServletResponse servletResponse)
-            throws ServletException, IOException{
-        PrintWriter w = servletResponse.getWriter();
-        w.println("<HTML>");
-        w.println("<HEAD>");
-        w.println("<TITLE>SQL Servlet</TITLE>");
-        w.println("</HEAD>");
-        w.println("<BODY>");
-        w.println("<BR>please, type your request");
-        w.println("<BR> <FORM action=/sql method=service>");
-        w.println("<TEXTAREA Name=sql cols=90 rows=8>");
+    private void sendSqlForm(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
+        PrintWriter pw = servletResponse.getWriter();
+
+        pw.println("<HTML>");
+        pw.println("<HEAD>");
+        pw.println("<TITLE>SQL Сервлет</TITLE>");
+        pw.println("</HEAD>");
+        pw.println("<BODY>");
+        pw.println("<H4>Введите запрос:</H4>");
+        pw.println("<FORM action=/sql method=service>");
+        pw.println("<TEXTAREA Name=sql cols=90 rows=8>");
+
         String sql = servletRequest.getParameter("sql");
-        if(sql != null) {
-            w.print(sql);
-        }
-        w.println("</TEXTAREA>");
-        w.println("<INPUT TYPE=submit value=execute>");
-        w.println("</FORM>");
-        w.println("<BR>");
-        if(sql != null) {
-            executeSql(sql.trim(), servletResponse);
-        }
-        w.println("</BODY>");
-        w.println("</HTML>");
+
+        if(sql != null) {pw.print(sql);}
+
+        pw.println("</TEXTAREA>");
+        pw.println("<INPUT TYPE=submit value=Отправить>");
+        pw.println("</FORM>");
+        pw.println("<BR>");
+
+        if(sql != null) {executeSql(sql.trim(), servletResponse, pw);}
+
+        pw.println("</BODY>");
+        pw.println("</HTML>");
+        pw.close();
     }
 
-    private void executeSql(String sql, ServletResponse response) throws ServletException,
-            IOException{
+    private void executeSql(String sql, ServletResponse response, PrintWriter pw) throws ServletException, IOException{
         try{
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/db_first","root","19941124");
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery(sql);
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/db_first", "root", "19941124"); //установка соединения
+            Statement st = con.createStatement(); //создание объекта для выполнения запросов
+            String result = sql.substring(0, 6);
 
-            for(int i=1;i<rs.getMetaData().getColumnCount();i++) {
-                response.getWriter().print(" - " + rs.getMetaData().getColumnName(i));
-            }
-            response.getWriter().flush();
+            //select
+                //executeQuery
+            //insert
+                //executeUpdate
+            //create
+            //update
 
-            while(rs.next()) {
-                for(int i=1;i<rs.getMetaData().getColumnCount();i++) {
-                    response.getWriter().print(" - " + rs.getString(i));
+            if (result.compareToIgnoreCase("select") == 0){
+                ResultSet rs = null;
+
+                try{
+                    rs = st.executeQuery(sql);
                 }
-                response.getWriter().println();
-            }
+                catch(SQLException ex){
+                    response.getWriter().print("База данных недоступна.");
+                    return;
+                }
 
-//закрыть resultset, соединение
-        } catch (SQLException ex) {
+                for(int i = 1; i < rs.getMetaData().getColumnCount(); i++) {
+                    response.getWriter().print(" - " + rs.getMetaData().getColumnName(i));
+                }
+                pw.println("<BR>");
+                response.getWriter().flush();
+                while(rs.next()) {
+                    for(int i = 1; i < rs.getMetaData().getColumnCount(); i++) {
+                        response.getWriter().print(" - " + rs.getString(i));
+                    }
+                    pw.println("<BR>");
+
+                }
+                rs.close();
+            }
+            else{
+                if (result.compareToIgnoreCase("insert") == 0) {
+                    try {
+                        st.executeUpdate(sql);
+                    }
+                    catch (SQLException ex) {
+                        response.getWriter().print("База данных недоступна.");
+                        return;
+                    }
+                    response.getWriter().print("Информация успешно добавлена в базу данных.");
+                }
+                else{
+                    if(result.compareToIgnoreCase("create") == 0){
+                        try{
+                            st.executeUpdate(sql);
+                        }
+                        catch (SQLException ex){
+                            response.getWriter().println("База данных недоступна.");
+                            return;
+                        }
+                        response.getWriter().println("Новая таблица успешно создана.");
+                    }
+                    else{
+                        if (result.compareToIgnoreCase("update") == 0){
+                            try{
+                                st.executeUpdate(sql);
+                            }
+                            catch (SQLException ex){
+                                response.getWriter().println("База данных недоступна.");
+                                return;
+                            }
+                            response.getWriter().println("Данные успешно обновлены.");
+                        }
+                        else{
+                            response.getWriter().println("Ошибка. Неверный запрос.");
+                        }
+                    }
+                }
+            }
+            con.close();
+            st.close();
+        }
+        catch (SQLException ex) {
             ex.toString();
         }
     }
