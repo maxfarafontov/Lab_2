@@ -7,6 +7,10 @@
         <element id="directory" name="classes">
           <element id="module-output" name="Lab_1" />
         </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="ProjectLib" />
+          <element id="library" level="project" name="TomcatLib" />
+        </element>
       </element>
     </root>
   </artifact>
