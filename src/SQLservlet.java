@@ -32,16 +32,18 @@ public class SQLservlet extends GenericServlet {
         pw.println("<TITLE>SQL Сервлет</TITLE>");
         pw.println("</HEAD>");
         pw.println("<BODY>");
-        pw.println("<H4>Введите запрос:</H4>");
+        pw.println("<H4>SQL Сервлет</H4>");
         pw.println("<FORM action=/sql method=service>");
-        pw.println("<TEXTAREA Name=sql cols=90 rows=8>");
+        pw.println("<TEXTAREA Name=sql cols=90 rows=8 placeholder=\"Введите запрос здесь\" required>");
 
         String sql = servletRequest.getParameter("sql");
 
         if(sql != null) {pw.print(sql);}
 
         pw.println("</TEXTAREA>");
-        pw.println("<INPUT TYPE=submit value=Отправить>");
+        pw.println("<INPUT type=submit value=Отправить>");
+        pw.println("<input class=sql value=Очистить type=reset>");
+
         pw.println("</FORM>");
         pw.println("<BR>");
 
