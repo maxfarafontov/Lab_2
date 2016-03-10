@@ -9,9 +9,8 @@
         <servlet-class>FirstServlet</servlet-class>
     </servlet>
     
-    
     <servlet-mapping>
         <servlet-name>FirstServlet</servlet-name>
-        <url-pattern>/first</url-pattern>
+        <url-pattern>/fs</url-pattern>
     </servlet-mapping>
 </web-app>
