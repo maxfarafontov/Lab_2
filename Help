@@ -1,0 +1,24 @@
+Доработать SQLservlet таким образом, чтобы поддержать работу следующих команд:
+1) SELECT
+2) INSERT
+3) CREATE TABLE
+4) UPDATE
+
+
+SELECT <список полей> FROM <список названий таблиц> [WHERE <список условий>] [ORDER BY <список полей>];
+SELECT name, project, works_since
+FROM staff
+WHERE
+name > 'Иван' AND
+works_since '1998-04-26';
+
+COUNT - вычисляет количество найденых строк;
+SUM - находит сумму значений в найденых строках;
+MAX - находит найбольшее среди найденых значений;
+MIN - находит наименьшее среди найденых значений;
+AVG - находит среднее значение от найденых .
+SELECT COUNT (project) FROM staff;
+SELECT MAX (projects_done) FROM staff;
+SELECT AVG (project_done) FROM staff
+
+INSERT INTO staff VALUES ("Robert", "1980-05-07", "2000-04-26", "$100", "Secret data");

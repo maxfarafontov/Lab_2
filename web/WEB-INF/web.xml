@@ -8,9 +8,10 @@
         <servlet-name>FirstServlet</servlet-name>
         <servlet-class>FirstServlet</servlet-class>
     </servlet>
-    
+
     <servlet-mapping>
         <servlet-name>FirstServlet</servlet-name>
         <url-pattern>/fs</url-pattern>
     </servlet-mapping>
+
 </web-app>
